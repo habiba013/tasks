@@ -1,85 +1,146 @@
-# Pet Adoption - Pet Module
+# Pet Adoption - Authentication Module
 
-## Entity
+## 1. What the Module Does
 
-The selected entity is **Pet** because pets are the main entities in the Pet Adoption Platform. The platform allows shelters and pet rescuers to add, update, delete, and manage pets available for adoption.
+This authentication module provides a secure authentication system for the Pet Adoption project.
 
-## Technologies
+It allows users to:
+
+* Create a new account using the signup route.
+* Login using their email and password.
+* Receive a JWT token after successful signup or login.
+* Access protected routes using the JWT token.
+* Use different user roles based on their permissions.
+
+Passwords are securely hashed using `bcryptjs`, and JWT is used for authentication.
+
+## 2. User Roles
+
+The project has the following user roles:
+
+* **Admin** – manages the system.
+* **Shelter** – manages pets available for adoption.
+* **Rescuer** – manages rescued pets.
+* **Adopter** – user who wants to adopt pets.
+
+## 3. Authentication Routes
+
+### POST /signup
+
+Creates a new user account and returns a JWT token.
+
+**Example Request:**
+
+```json
+{
+  "name": "Ahmed Ali",
+  "email": "ahmed@example.com",
+  "password": "123456",
+  "role": "Adopter",
+  "phone": "01000000000"
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "User registered successfully",
+  "token": "JWT_TOKEN"
+}
+```
+
+### POST /login
+
+Authenticates an existing user and returns a JWT token.
+
+**Example Request:**
+
+```json
+{
+  "email": "ahmed@example.com",
+  "password": "123456"
+}
+```
+
+**Response:**
+
+```json
+{
+  "message": "Login successful",
+  "token": "JWT_TOKEN"
+}
+```
+
+## 4. Protected Route
+
+### GET /profile
+
+This is a protected route.
+
+The user must send a valid JWT token in the request header.
+
+**Authorization Header:**
+
+```text
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+If the token is valid, the user can access their profile.
+
+If the token is missing or invalid, access is denied.
+
+## 5. Technologies Used
 
 * Node.js
 * Express.js
 * MongoDB
 * Mongoose
+* bcryptjs
+* JSON Web Token (JWT)
+* Postman
 
-## Routes
+## 6. How to Run the Project Locally
 
-### 1. Create a Pet
-
-**POST `/pets`**
-
-Creates a new pet in the database.
-
-### 2. Get All Pets
-
-**GET `/pets`**
-
-Returns all pets stored in the database.
-
-### 3. Get Pet by ID
-
-**GET `/pets/:id`**
-
-Returns a specific pet using its ID.
-
-### 4. Update a Pet
-
-**PATCH `/pets/:id`**
-
-Updates the information of an existing pet.
-
-### 5. Delete a Pet
-
-**DELETE `/pets/:id`**
-
-Deletes a specific pet from the database.
-
-## Pet Fields
-
-The Pet model contains:
-
-* `name`
-* `type`
-* `breed`
-* `age`
-* `gender`
-* `description`
-
-## How to Run Locally
-
-1. Install the project dependencies:
+### Step 1: Install dependencies
 
 ```bash
 npm install
 ```
 
-2. Create a `.env` file and add the MongoDB connection string:
+### Step 2: Create `.env`
 
-```text
+Create a `.env` file and add:
+
+```env
 MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+PORT=5000
 ```
 
-3. Start the server:
+### Step 3: Start the server
 
 ```bash
-node server.js
+npm start
 ```
 
-4. The server runs on:
+The server will run on:
 
 ```text
 http://localhost:5000
 ```
 
-## Testing
+## 7. Postman Testing
 
-All CRUD routes were tested using Postman.
+The authentication module was tested using Postman.
+
+The following tests should be performed:
+
+1. Register a new user using `POST /signup`.
+2. Verify that a JWT token is returned.
+3. Login using correct credentials with `POST /login`.
+4. Test login using incorrect credentials.
+5. Copy the JWT token.
+6. Access `GET /profile` using the token.
+7. Test the protected route without a token and verify that access is denied.
+8. Take screenshots of the tests for submission.
